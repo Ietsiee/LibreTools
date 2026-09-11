@@ -1,11 +1,16 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="LibreTools - Free, Private, Secure, Open-Source Tools">
-    <title>LibreTools</title><link rel="stylesheet" href="style.css">
+    <title>LibreTools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 
-</head><body><header>
+<body>
+
+<header>
     <div class="header-content">
         <a href="index.html" class="logo">LibreTools</a>
     </div>
@@ -18,17 +23,26 @@
         <p>Free, Private, Secure, Open-Source Tools</p>
     </section>
 
-    <section class="tools">
+    <section class="search-tools">
 
-        <input type="search" id="tool-search" placeholder="Search tools...">
+        <input
+            class="field"
+            type="search"
+            id="tool-search"
+            placeholder="Search tools..."
+        >
 
-        <a href="password-generator.html" class="tool">
+        <a href="tools/password-generator.html" class="tool">
             <span class="tool-name">Password Generator</span>
-            <span class="tool-description">
-                Generate secure passwords locally
+            <span class="tool-description">Generate secure passwords locally
             </span>
         </a>
 
+        <a href="tools/sha256-generator.html" class="tool">
+            <span class="tool-name">SHA-256 Generator</span>
+            <span class="tool-description">Generate SHA-256 hashes locally</span>
+        </a>
+        
     </section>
 
 </main>

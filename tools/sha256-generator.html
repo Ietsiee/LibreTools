@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Generate SHA-256 hashes locally with LibreTools">
+    <title>SHA-256 Generator - LibreTools</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+        <a href="../index.html" class="logo">LibreTools</a>
+    </div>
+</header>
+
+<main>
+
+    <section class="intro">
+        <h1>SHA-256 Generator</h1>
+        <p>Generate SHA-256 hashes locally</p>
+    </section>
+
+    <section class="generator">
+
+        <textarea
+            class="field"
+            id="input"
+            placeholder="Enter text..."
+        ></textarea>
+
+        <button onclick="generateHash()">Generate Hash</button>
+
+        <div class="result">
+            <input class="field" type="text" id="hash" readonly>
+            <button onclick="copyHash()">Copy</button>
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <span>Made by Ietsiee</span>
+
+    <div class="footer-links">
+        <a href="https://github.com/Ietsiee/LibreTools">source</a>
+        <a href="https://github.com/Ietsiee/LibreTools/blob/main/LICENSE">license</a>
+    </div>
+</footer>
+
+<script>
+    async function generateHash() {
+        const input = document.getElementById("input").value;
+        const data = new TextEncoder().encode(input);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+        const hash = hashArray
+            .map(byte => byte.toString(16).padStart(2, "0"))
+            .join("");
+
+        document.getElementById("hash").value = hash;
+    }
+
+    async function copyHash() {
+        const hash = document.getElementById("hash").value;
+
+        if (!hash) return;
+
+        await navigator.clipboard.writeText(hash);
+    }
+</script>
+
+</body>
+</html>
