@@ -1,50 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="LibreTools - Free, Private, Secure, Open-Source Tools">
-    <title>LibreTools</title>
+    <title>LibreTools</title><link rel="stylesheet" href="style.css">
 
-    <link rel="stylesheet" href="style.css">
-</head>
+</head><body><header>
+    <div class="header-content">
+        <a href="index.html" class="logo">LibreTools</a>
+    </div>
+</header>
 
-<body>
+<main>
 
-    <header>
-        <div class="header-content">
-            <a href="index.html" class="logo">LibreTools</a>
-        </div>
-    </header>
+    <section class="intro">
+        <h1>LibreTools</h1>
+        <p>Free, Private, Secure, Open-Source Tools</p>
+    </section>
 
-    <main>
+    <section class="tools">
 
-        <section class="intro">
-            <h1>LibreTools</h1>
-            <p>Free, Private, Secure, Open-Source Tools</p>
-        </section>
+        <input type="search" id="tool-search" placeholder="Search tools...">
 
-        <section class="tools">
+        <a href="password-generator.html" class="tool">
+            <span class="tool-name">Password Generator</span>
+            <span class="tool-description">
+                Generate secure passwords locally
+            </span>
+        </a>
 
-            <a href="password-generator.html" class="tool">
-                <span class="tool-name">Password Generator</span>
-                <span class="tool-description">
-                    Generate secure passwords locally
-                </span>
-            </a>
+    </section>
 
-        </section>
+</main>
 
-    </main>
+<footer>
+    <span>Made by Ietsiee</span>
 
-    <footer>
-        <span>Made by Ietsiee</span>
+    <div class="footer-links">
+        <a href="https://github.com/Ietsiee/LibreTools">source</a>
+        <a href="https://github.com/Ietsiee/LibreTools/blob/main/LICENSE">license</a>
+    </div>
+</footer>
 
-        <div class="footer-links">
-            <a href="https://github.com/Ietsiee/LibreTools">source</a>
-            <a href="https://github.com/Ietsiee/LibreTools/blob/main/LICENSE">license</a>
-        </div>
-    </footer>
+<script>
+    const search = document.getElementById("tool-search");
+    const tools = document.querySelectorAll(".tool");
+
+    search.addEventListener("input", () => {
+        const query = search.value.toLowerCase();
+
+        tools.forEach(tool => {
+            tool.style.display = tool.textContent.toLowerCase().includes(query)
+                ? ""
+                : "none";
+        });
+    });
+</script>
 
 </body>
 </html>

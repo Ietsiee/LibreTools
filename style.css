@@ -290,3 +290,24 @@ footer {
         gap: 8px;
     }
 }
+
+#tool-search {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    background: #0b0a0f;
+    color: #d8d3df;
+    border: 1px solid #28222e;
+    border-radius: 6px;
+    font-family: monospace;
+    font-size: 13px;
+    outline: none;
+}
+
+#tool-search:focus {
+    border-color: #60427a;
+}
+
+#tool-search::placeholder {
+    color: #57515e;
+}
