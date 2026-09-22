@@ -1,0 +1,441 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Pick colors from images with LibreTools">
+    <title>Color Picker - LibreTools</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+
+<header>
+    <div class="header-content">
+        <a href="../index.html" class="logo">LibreTools</a>
+    </div>
+</header>
+
+<main>
+
+    <section class="intro">
+        <h1>Color Picker</h1>
+        <p>Pick colors from an image</p>
+    </section>
+
+    <section class="generator">
+
+        <div class="result">
+            <input
+                class="field"
+                type="file"
+                id="fileInput"
+                accept="image/*"
+            >
+        </div>
+
+        <div class="result">
+            <input
+                class="field"
+                type="url"
+                id="imageUrl"
+                placeholder="Paste image URL..."
+            >
+
+            <button onclick="loadFromUrl()">
+                Load
+            </button>
+        </div>
+
+        <div
+            id="imageContainer"
+            style="
+                display: none;
+                margin-top: 12px;
+                overflow: hidden;
+                background: #100e14;
+                border: 1px solid #28222e;
+                border-radius: 8px;
+                cursor: crosshair;
+            "
+        >
+            <img
+                id="image"
+                alt="Image"
+                style="
+                    display: block;
+                    width: 100%;
+                    height: auto;
+                "
+            >
+        </div>
+
+        <canvas id="canvas" style="display: none;"></canvas>
+
+        <p
+            id="hint"
+            style="
+                margin-top: 12px;
+                color: #57515e;
+                font-family: monospace;
+                font-size: 12px;
+            "
+        >
+            Upload an image or paste an image URL.
+        </p>
+
+        <div
+            id="colorResult"
+            style="
+                display: none;
+                margin-top: 12px;
+                padding: 16px;
+                background: #100e14;
+                border: 1px solid #28222e;
+                border-radius: 8px;
+            "
+        >
+
+            <div
+                id="colorPreview"
+                style="
+                    width: 70px;
+                    height: 70px;
+                    margin-bottom: 14px;
+                    background: #000000;
+                    border: 1px solid #28222e;
+                    border-radius: 6px;
+                "
+            ></div>
+
+            <div class="result" style="margin-top: 0;">
+                <input
+                    class="field"
+                    type="text"
+                    id="hexValue"
+                    value="#000000"
+                    readonly
+                >
+
+                <button onclick="copyValue('hexValue')">
+                    Copy
+                </button>
+            </div>
+
+            <div class="result">
+                <input
+                    class="field"
+                    type="text"
+                    id="rgbValue"
+                    value="rgb(0, 0, 0)"
+                    readonly
+                >
+
+                <button onclick="copyValue('rgbValue')">
+                    Copy
+                </button>
+            </div>
+
+            <div class="result">
+                <input
+                    class="field"
+                    type="text"
+                    id="hslValue"
+                    value="hsl(0, 0%, 0%)"
+                    readonly
+                >
+
+                <button onclick="copyValue('hslValue')">
+                    Copy
+                </button>
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    <span>Made by Ietsiee</span>
+
+    <div class="footer-links">
+        <a href="https://github.com/Ietsiee/LibreTools">source</a>
+        <a href="https://github.com/Ietsiee/LibreTools/blob/main/LICENSE">
+            license
+        </a>
+    </div>
+</footer>
+
+<script>
+
+    const fileInput =
+        document.getElementById("fileInput");
+
+    const imageUrl =
+        document.getElementById("imageUrl");
+
+    const image =
+        document.getElementById("image");
+
+    const canvas =
+        document.getElementById("canvas");
+
+    const imageContainer =
+        document.getElementById("imageContainer");
+
+    const colorResult =
+        document.getElementById("colorResult");
+
+    const colorPreview =
+        document.getElementById("colorPreview");
+
+    const hint =
+        document.getElementById("hint");
+
+    const ctx =
+        canvas.getContext("2d", {
+            willReadFrequently: true
+        });
+
+    fileInput.addEventListener("change", function () {
+
+        const file = this.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            loadImage(event.target.result, false);
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+    function loadFromUrl() {
+
+        const url =
+            imageUrl.value.trim();
+
+        if (!url) {
+            alert("Enter an image URL.");
+            return;
+        }
+
+        loadImage(url, true);
+    }
+
+    function loadImage(source, cors) {
+
+        imageContainer.style.display = "none";
+        colorResult.style.display = "none";
+
+        if (cors) {
+            image.crossOrigin = "anonymous";
+        } else {
+            image.removeAttribute("crossorigin");
+        }
+
+        image.onload = function () {
+
+            canvas.width =
+                image.naturalWidth;
+
+            canvas.height =
+                image.naturalHeight;
+
+            try {
+
+                ctx.clearRect(
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+                ctx.drawImage(
+                    image,
+                    0,
+                    0
+                );
+
+                ctx.getImageData(
+                    0,
+                    0,
+                    1,
+                    1
+                );
+
+                imageContainer.style.display =
+                    "block";
+
+                hint.textContent =
+                    "Click anywhere on the image to pick a color.";
+
+            } catch (error) {
+
+                hint.textContent =
+                    "This image cannot be read because the server does not allow CORS.";
+
+                alert(
+                    "This image cannot be read because the image server does not allow CORS."
+                );
+            }
+        };
+
+        image.onerror = function () {
+
+            imageContainer.style.display =
+                "none";
+
+            hint.textContent =
+                "Could not load the image.";
+
+            alert("Could not load the image.");
+        };
+
+        image.src = source;
+    }
+
+    image.addEventListener("click", function (event) {
+
+        const rect =
+            image.getBoundingClientRect();
+
+        const scaleX =
+            image.naturalWidth / rect.width;
+
+        const scaleY =
+            image.naturalHeight / rect.height;
+
+        const x = Math.floor(
+            (event.clientX - rect.left) *
+            scaleX
+        );
+
+        const y = Math.floor(
+            (event.clientY - rect.top) *
+            scaleY
+        );
+
+        const pixel =
+            ctx.getImageData(
+                x,
+                y,
+                1,
+                1
+            ).data;
+
+        const r = pixel[0];
+        const g = pixel[1];
+        const b = pixel[2];
+
+        const hex =
+            rgbToHex(r, g, b);
+
+        const hsl =
+            rgbToHsl(r, g, b);
+
+        document.getElementById("hexValue").value =
+            hex;
+
+        document.getElementById("rgbValue").value =
+            `rgb(${r}, ${g}, ${b})`;
+
+        document.getElementById("hslValue").value =
+            hsl;
+
+        colorPreview.style.backgroundColor =
+            hex;
+
+        colorResult.style.display =
+            "block";
+    });
+
+    function rgbToHex(r, g, b) {
+
+        return "#" +
+            [r, g, b]
+                .map(value =>
+                    value
+                        .toString(16)
+                        .padStart(2, "0")
+                )
+                .join("")
+                .toUpperCase();
+    }
+
+    function rgbToHsl(r, g, b) {
+
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        const max =
+            Math.max(r, g, b);
+
+        const min =
+            Math.min(r, g, b);
+
+        let h = 0;
+        let s = 0;
+
+        const l =
+            (max + min) / 2;
+
+        if (max !== min) {
+
+            const d =
+                max - min;
+
+            s =
+                l > 0.5
+                    ? d / (2 - max - min)
+                    : d / (max + min);
+
+            switch (max) {
+
+                case r:
+                    h =
+                        (g - b) / d +
+                        (g < b ? 6 : 0);
+                    break;
+
+                case g:
+                    h =
+                        (b - r) / d + 2;
+                    break;
+
+                case b:
+                    h =
+                        (r - g) / d + 4;
+                    break;
+            }
+
+            h /= 6;
+        }
+
+        return `hsl(
+            ${Math.round(h * 360)},
+            ${Math.round(s * 100)}%,
+            ${Math.round(l * 100)}%
+        )`.replace(/\s+/g, " ");
+    }
+
+    function copyValue(elementId) {
+
+        const input =
+            document.getElementById(elementId);
+
+        navigator.clipboard.writeText(
+            input.value
+        );
+    }
+
+</script>
+
+</body>
+</html>
+```
